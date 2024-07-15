@@ -10,35 +10,21 @@ use ruff_text_size::{Ranged, TextRange};
 use rustc_hash::FxHashSet;
 
 /// ## What it does
-/// Checks for strings that contain f-string syntax but are not f-strings.
+/// Checks for Decimal calls passing a float literal.
 ///
 /// ## Why is this bad?
-/// An f-string missing an `f` at the beginning won't format anything, and instead
-/// treat the interpolation syntax as literal.
-///
-/// Since there are many possible string literals which contain syntax similar to f-strings yet are not intended to be,
-/// this lint will disqualify any literal that satisfies any of the following conditions:
-///
-/// 1. The string literal is a standalone expression. For example, a docstring.
-/// 2. The literal is part of a function call with argument names that match at least one variable (for example: `format("Message: {value}", value = "Hello World")`)
-/// 3. The literal (or a parent expression of the literal) has a direct method call on it (for example: `"{value}".format(...)`)
-/// 4. The string has no `{...}` expression sections, or uses invalid f-string syntax.
-/// 5. The string references variables that are not in scope, or it doesn't capture variables at all.
-/// 6. Any format specifiers in the potential f-string are invalid.
+/// Float literals are non-deterministic and can lead to unexpected results. The Decimal class is designed to handle
+/// numbers with fixed-point precision, so a string literal should be used instead.
 ///
 /// ## Example
 ///
 /// ```python
-/// name = "Sarah"
-/// dayofweek = "Tuesday"
-/// msg = "Hello {name}! It is {dayofweek} today!"
+/// num = Decimal(1.2345)
 /// ```
 ///
 /// Use instead:
 /// ```python
-/// name = "Sarah"
-/// dayofweek = "Tuesday"
-/// msg = f"Hello {name}! It is {dayofweek} today!"
+/// num = Decimal("1.2345")
 /// ```
 #[violation]
 pub struct MissingFStringSyntax;
