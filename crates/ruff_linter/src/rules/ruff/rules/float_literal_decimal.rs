@@ -27,16 +27,16 @@ use rustc_hash::FxHashSet;
 /// num = Decimal("1.2345")
 /// ```
 #[violation]
-pub struct MissingFStringSyntax;
+pub struct FloatLiteralDecimal;
 
-impl AlwaysFixableViolation for MissingFStringSyntax {
+impl AlwaysFixableViolation for FloatLiteralDecimal {
     #[derive_message_formats]
     fn message(&self) -> String {
-        format!(r#"Possible f-string without an `f` prefix"#)
+        format!(r#"Decimal() called with float literal argument"#)
     }
 
     fn fix_title(&self) -> String {
-        "Add `f` prefix".into()
+        "Use a string literal instead".into()
     }
 }
 
@@ -65,7 +65,7 @@ pub(crate) fn missing_fstring_syntax(
     }
 
     if should_be_fstring(literal, locator, semantic) {
-        let diagnostic = Diagnostic::new(MissingFStringSyntax, literal.range())
+        let diagnostic = Diagnostic::new(FloatLiteralDecimal, literal.range())
             .with_fix(fix_fstring_syntax(literal.range()));
         diagnostics.push(diagnostic);
     }
